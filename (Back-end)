@@ -1,0 +1,27 @@
+from flask import Flask, request, jsonify
+from PIL import Image
+import numpy as np
+import tensorflow as tf
+
+app = Flask(__name__)
+
+# Cargar modelo preentrenado de IA (puedes cargar tu propio modelo o usar uno de ejemplo)
+model = tf.keras.applications.MobileNetV2(weights='imagenet')
+
+def process_image(image):
+    image = Image.open(image)
+    image = image.resize((224, 224))
+    image = np.array(image) / 255.0
+    image = np.expand_dims(image, axis=0)
+    return image
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    file = request.files['file']
+    image = process_image(file)
+    prediction = model.predict(image)
+    result = tf.keras.applications.mobilenet_v2.decode_predictions(prediction)
+    return jsonify(result[0])
+
+if __name__ == '__main__':
+    app.run(debug=True)
