@@ -1,0 +1,5 @@
+/VestiScan
+    /static           # Para almacenar imágenes subidas
+    /templates        # Para almacenar los archivos HTML
+        index.html    # El archivo frontend
+    app.py            # El archivo backend
