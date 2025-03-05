@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VestiScan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        input[type="file"] {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Bienvenido a VestiScan</h1>
+    <p>Sube tu imagen de ropa para predecir su ajuste.</p>
+    <input type="file" id="imageUpload" accept="image/*" onchange="uploadImage()">
+    <div id="prediction"></div>
+
+    <script>
+        function uploadImage() {
+            let formData = new FormData();
+            formData.append('file', document.getElementById('imageUpload').files[0]);
+
+            fetch('http://localhost:5000/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                let result = data.map(prediction => {
+                    return `<p>${prediction[1]}: ${prediction[2]}</p>`;
+                }).join('');
+                document.getElementById('prediction').innerHTML = result;
+            });
+        }
+    </script>
+</body>
+</html>
